@@ -15,30 +15,33 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
     private int size;
     public MinFourHeapComparable() {
         this.data=(E[]) new Object[10];
-        this.size=1;
+        this.size=0;
     }
 
     @Override
     public boolean hasWork() {
-        if(this.size-1==0){
+        if(this.size==0){
             return false;
         }
         return true;
     }
     @Override
     public void add(E work)  {
-        if(this.data.length==this.size-1){
+        if(this.data.length==this.size){
             E[] copy=(E[]) new Object[this.data.length*2];
                     for(int i=0; i<this.data.length;i++){
                         copy[i]=this.data[i];
                     }
                     this.data=copy;
         }
-        this.data[size-1]=work;
+        this.data[size]=work;
         this.size++;
+        if(size==1){
+            return;
+        }
         int size2=this.size;
         while(this.data[(int)Math.floor((size2+2)/4)-1].compareTo(work)<0){
-            this.data[size2]=this.data[(int)Math.floor((size2+2)/4)-1];
+            this.data[size2-1]=this.data[(int)Math.floor((size2+2)/4)-1];
             this.data[(int)Math.floor((size2+2)/4)-1]=work;
             size2=(int)Math.floor((size2+2)/4);
         }
@@ -46,7 +49,7 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
 
     @Override
     public E peek() {
-        if(this.size==1){
+        if(this.size==0){
             throw new NoSuchElementException();
         }
         return this.data[0];
@@ -54,12 +57,12 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
 
     @Override
     public E next() {
-        if(this.size==1){
+        if(this.size==0){
             throw new NoSuchElementException();
         }
         E ans=this.data[0];
         this.data[0]=this.data[size-1];
-        size--;
+        this.size--;
         int index=1;
         E temp= this.data[0];
         E min= this.data[(4*index)-3];
@@ -79,7 +82,7 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
 
     @Override
     public int size() {
-        return size-1;
+        return size;
     }
 
     @Override

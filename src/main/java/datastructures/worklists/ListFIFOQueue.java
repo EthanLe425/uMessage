@@ -10,46 +10,71 @@ import java.util.NoSuchElementException;
  * for method specifications.
  */
 public class ListFIFOQueue<E> extends FIFOWorkList<E> {
+    private static class ListNode<E>{
+        ListNode next;
+        E work;
+        public ListNode(E work){
+            this.work=work;
+            this.next=null;
+        }
+    }
 
+    private ListNode front;
+    private ListNode back;
+    private int size;
     public ListFIFOQueue() {
-        throw new NotYetImplementedException();
+        this.size=0;
+        this.front=null;
+        this.back=null;
     }
 
     @Override
     public void add(E work) {
-        throw new NotYetImplementedException();
+        if(this.back==null){
+            this.front=new ListNode<E>(work);
+            this.back=this.front;
+            this.size++;
+        }
+        else {
+            this.back.next = new ListNode<E>(work);
+            this.back = this.back.next;
+            this.size++;
+        }
     }
 
     @Override
     public E peek() {
-        throw new NotYetImplementedException();
+        if(this.hasWork()){
+            ListNode pog = this.front;
+            return (E) pog.work;
+        }
+        else{
+            throw new NoSuchElementException();
+        }
     }
 
     @Override
     public E next() {
-        throw new NotYetImplementedException();
+        if (this.hasWork()) {
+            ListNode node = this.front;
+            this.front = this.front.next;
+            this.size--;
+            return (E) node.work;
+        }
+        else{
+            throw new NoSuchElementException();
+        }
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return this.size;
     }
 
     @Override
     public void clear() {
-        throw new NotYetImplementedException();
+        this.size=0;
+        this.front=null;
+        this.back=null;
     }
-
-    private class ListNode {
-
-        public E data;
-        public ListNode next;
-
-        public ListNode(E data) {
-            this.data = data;
-            next = null;
-        }
-
-    }
-
 }
