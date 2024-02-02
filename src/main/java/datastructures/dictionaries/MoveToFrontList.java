@@ -47,15 +47,15 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
         if(key==null||value==null){
             throw new IllegalArgumentException();
         }
-        V vals=this.find(key);
-        if(vals!=null){
-            this.head.data.value=vals;
+        V val=this.find(key);
+        if(val!=null){
+            this.head.data.value=val;
         }
         else{
             this.head=new MFLnode(new Item(key,value),this.head);
             this.size++;
         }
-        return vals;
+        return val;
     }
 
     @Override
