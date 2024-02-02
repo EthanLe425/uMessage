@@ -1,8 +1,10 @@
+
 package datastructures.dictionaries;
 
 import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.trie.TrieMap;
 import cse332.types.BString;
+import datastructures.worklists.ArrayStack;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,26 +40,112 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public V insert(K key, V value) {
-        throw new NotYetImplementedException();
+        if(key==null || value==null){
+            throw new IllegalArgumentException();
+        }
+        if(this.root==null){
+            this.root=new HashTrieNode();
+        }
+        V ans=null;
+        if(key.isEmpty()){
+            ans=this.root.value;
+            this.root.value=value;
+        }
+        else {
+            HashTrieNode curr = (HashTrieNode) this.root;
+            for (A lett : key) {
+                if (!curr.pointers.containsKey(lett)) {
+                    curr.pointers.put(lett, new HashTrieNode());
+                }
+                curr = curr.pointers.get(lett);
+            }
+            ans = curr.value;
+            curr.value = value;
+        }
+        if(ans==null){
+            this.size++;
+        }
+        return ans;
     }
 
     @Override
     public V find(K key) {
-        throw new NotYetImplementedException();
+        if(key==null){
+            throw new IllegalArgumentException();
+        }
+        if(this.root==null){
+            return null;
+        }
+        HashTrieNode fomb=(HashTrieNode) this.root;
+        for(A lett:key){
+            if(fomb.pointers.containsKey(lett)){
+                fomb=fomb.pointers.get(lett);
+            }
+            else{
+                return null;
+            }
+        }
+        V ans=fomb.value;
+        return ans;
     }
 
     @Override
     public boolean findPrefix(K key) {
-        throw new NotYetImplementedException();
+        if(key==null){
+            throw new IllegalArgumentException();
+        }
+        if(this.root==null){
+            return false;
+        }
+        HashTrieNode fomb= (HashTrieNode)this.root;
+        for(A lett:key){
+            if(fomb.pointers.containsKey(lett)){
+                fomb=fomb.pointers.get(lett);
+            }
+            else{
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public void delete(K key) {
-        throw new NotYetImplementedException();
+        if(key==null){
+            throw new IllegalArgumentException();
+        }
+        ArrayStack<HashTrieNode>psps=new ArrayStack<HashTrieNode>();
+        HashTrieNode ayy=(HashTrieNode)this.root;
+        A finl=null;
+        for(A lett:key){
+            if(ayy.pointers.containsKey(lett)){
+                psps.add(ayy);
+                ayy=ayy.pointers.get(lett);
+                finl=lett;
+            }
+            else{
+                return;
+            }
+        }
+        if(ayy.value!=null) {
+            this.size--;
+            ayy.value = null;
+            while (psps.size() != 0) {
+                HashTrieNode nex = psps.next();
+                if (nex.pointers.isEmpty() && nex.value == null) {
+                    HashTrieNode rem = psps.peek();
+                    rem.pointers.remove(finl);
+                } else {
+                    return;
+                }
+            }
+        }
+
     }
 
     @Override
     public void clear() {
-        throw new NotYetImplementedException();
+        this.size=0;
+        this.root= new HashTrieNode();
     }
 }

@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  * See cse332/interfaces/worklists/FixedSizeFIFOWorkList.java
  * for method specifications.
  */
-public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFIFOWorkList<E> {
+public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
     private int front;
     private int back;
     private int size;

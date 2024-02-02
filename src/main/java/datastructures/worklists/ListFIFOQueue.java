@@ -1,3 +1,4 @@
+
 package datastructures.worklists;
 
 import cse332.exceptions.NotYetImplementedException;
@@ -30,7 +31,7 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
 
     @Override
     public void add(E work) {
-        if(this.back==null){
+        if(this.front==null){
             this.front=new ListNode<E>(work);
             this.back=this.front;
             this.size++;
@@ -44,25 +45,25 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
 
     @Override
     public E peek() {
-        if(this.hasWork()){
-            ListNode pog = this.front;
-            return (E) pog.work;
+        if(this.front==null|| this.front.work==null){
+            throw new NoSuchElementException();
         }
         else{
-            throw new NoSuchElementException();
+            ListNode pog = this.front;
+            return (E) pog.work;
         }
     }
 
     @Override
     public E next() {
-        if (this.hasWork()) {
-            ListNode node = this.front;
-            this.front = this.front.next;
-            this.size--;
-            return (E) node.work;
+        if(this.front==null || this.front.work==null){
+            throw new NoSuchElementException();
         }
         else{
-            throw new NoSuchElementException();
+            E node= (E)this.front.work;
+            this.front = this.front.next;
+            this.size--;
+            return node;
         }
     }
 
