@@ -7,6 +7,7 @@ import cse332.interfaces.misc.SimpleIterator;
 import cse332.interfaces.worklists.WorkList;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * 1. The list is typically not sorted.
@@ -22,21 +23,15 @@ import java.util.Iterator;
  * dictionary/list's iterator.
  */
 public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
-    public MFLnode head;
+    private MFLnode head;
     private class MFLnode extends Item<K,V>{
         private MFLnode next;
-        public MFLnode(K key, V val){
-            super(key, val);
-            this.next=null;
-
-        }
         public MFLnode(K key, V val, MFLnode nex){
             super(key,val);
             this.next=nex;
         }
     }
     public MoveToFrontList(){
-        super();
         this.head=null;
         this.size=0;
     }
@@ -45,21 +40,32 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
         if(key==null||value==null){
             throw new IllegalArgumentException();
         }
-        if(this.head==null){
-            this.head= new MFLnode(key, value, null);
-                    size++;
+        if(!this.head.key.equals(key)){
+            this.head= new MFLnode(key,value,this.head);
+            this.size++;
             return null;
         }
-        V val= find(key);
-        if(val==null){
-            MFLnode put= new MFLnode(key,value);
-            put.next=this.head;
-            this.head=put;
-            size++;
-            return val;
+        if(this.head.equals(key)){
+            V old=this.head.value;
+            this.head.value=value;
+            return old;
         }
+        MFLnode curr=this.head;
+        while(curr.next!=null&&!curr.next.key.equals(key)){
+            curr=curr.next;
+        }
+        if(curr.next==null){
+            this.head= new MFLnode(key,value,this.head);
+            this.size++;
+            return null;
+        }
+        MFLnode temp= curr.next;
+        curr.next=curr.next.next;
+        temp.next=this.head;
+        this.head=temp;
+        V ans=this.head.value;
         this.head.value=value;
-        return val;
+        return ans;
     }
 
     @Override
@@ -70,38 +76,40 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
         if(this.head==null){
             return null;
         }
-        MFLnode curr=this.head;
-        MFLnode check= null;
-        while(!curr.next.key.equals(key) && curr.next!=null&&curr.next.value!=null){
-            check=curr;
-            curr=curr.next;
-        }
-        if(curr==null){
-            return null;
-        }
-        if(check==null){
+        if(this.head.key.equals(key)){
             return this.head.value;
         }
-        check.next=curr.next;
-        curr.next=this.head;
-        this.head=curr;
-        return curr.value;
+        MFLnode curr=this.head;
+        while(curr.next!=null && !curr.next.key.equals(key)){
+            curr=curr.next;
+        }
+        if(curr.next==null){
+            return null;
+        }
+        MFLnode temp=curr.next;
+        curr.next=curr.next.next;
+        temp.next=this.head;
+        this.head=temp;
+        return this.head.value;
     }
 
     @Override
     public Iterator<Item<K, V>> iterator() {
         return new MFLit();
     }
-    private class MFLit extends SimpleIterator<Item<K,V>>{
+    private class MFLit implements Iterator<Item<K,V>>{
         private MFLnode curr;
         public MFLit(){
-            this.curr=MoveToFrontList.this.head;
+            curr=head;
         }
         public boolean hasNext(){
-            return this.curr!=null &&curr.next!=null;
+            return this.curr!=null;
         }
         public Item<K,V> next(){
-           Item<K,V> item=new Item<>(this.curr.key,this.curr.value);
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+           Item<K,V> item=new Item<>(curr);
            this.curr=this.curr.next;
            return item;
         }
