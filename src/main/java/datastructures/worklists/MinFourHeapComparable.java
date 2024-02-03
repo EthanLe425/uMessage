@@ -34,16 +34,16 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
             }
             this.data=copy;
         }
-        this.data[size]=work;
+        this.data[this.size]=work;
         this.size++;
         if(size<2){
             return;
         }
         int size2=this.size-1;
-        while((this.data[(int)Math.floor((size2-1)/4)].compareTo(work))<0&&size2>0){
-            this.data[size2]=this.data[(int)Math.floor((size2-1)/4)];
-            this.data[(int)Math.floor((size2-1)/4)]=work;
-            size2=(int)Math.floor((size2-1)/4);
+        while((this.data[(size2-1)/4].compareTo(work))>0&&size2>0){
+            this.data[size2]=this.data[(size2-1)/4];
+            this.data[(size2-1)/4]=work;
+            size2=(size2-1)/4;
         }
     }
 
@@ -57,14 +57,14 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
 
     @Override
     public E next() {
-        if(this.size==0){
+        if(!this.hasWork()){
             throw new NoSuchElementException();
         }
         E ans=this.data[0];
         this.data[0]=this.data[size-1];
         this.data[size-1]=null;
         this.size--;
-        if(this.size>0) {
+        if(this.size>1) {
             int index = 0;
             int minin=minind(index);
             while (minin!=-1 && this.data[index].compareTo(this.data[minin])>0) {
@@ -81,11 +81,11 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
     private int minind(int index){
         int min=-1;
         if(index>this.size){
-            return -1;
+            return min;
         }
         min=index;
-        for(int i=index;i<index+4;i++){
-            if(i<size && this.data[i].compareTo(this.data[min])<0){
+        for(int i=index+1;i<index+4;i++){
+            if(i<this.size && this.data[i].compareTo(this.data[min])<0){
                 min=i;
             }
         }
