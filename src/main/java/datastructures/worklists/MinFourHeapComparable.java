@@ -29,10 +29,10 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
     public void add(E work)  {
         if(this.data.length==this.size+1){
             E[] copy=(E[]) new Comparable[this.data.length*2];
-                    for(int i=0; i<this.data.length;i++){
-                        copy[i]=this.data[i];
-                    }
-                    this.data=copy;
+            for(int i=0; i<this.data.length;i++){
+                copy[i]=this.data[i];
+            }
+            this.data=copy;
         }
         this.data[size]=work;
         this.size++;
@@ -80,16 +80,16 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
     }
     private int minind(int index){
         int min=-1;
-       if(index>this.size){
-           return -1;
-       }
-       min=index;
-       for(int i=index;i<index+4;i++){
-           if(i<size && this.data[i].compareTo(this.data[min])<0){
-               min=i;
-           }
-       }
-       return min;
+        if(index>this.size){
+            return -1;
+        }
+        min=index;
+        for(int i=index;i<index+4;i++){
+            if(i<size && this.data[i].compareTo(this.data[min])<0){
+                min=i;
+            }
+        }
+        return min;
     }
     @Override
     public int size() {
