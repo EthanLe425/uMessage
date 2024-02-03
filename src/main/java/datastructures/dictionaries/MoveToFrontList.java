@@ -30,16 +30,9 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
     private class MFLnode{
         private Item<K,V> data;
         private MFLnode next;
-        public MFLnode(){
-            this(null,null);
-        }
-
         public MFLnode(Item<K,V> ins, MFLnode next) {
             this.data=ins;
             this.next=next;
-        }
-        public MFLnode(Item<K,V> ins){
-            this(ins,null);
         }
     }
     @Override
@@ -71,13 +64,13 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
         }
         MFLnode curr= this.head;
         V ans = null;
-        while(curr.next!=null&&curr.next.data!=null&&curr.next.data.key.equals(key)){
+        while(curr.next!=null&&curr.next.data!=null&&!curr.next.data.key.equals(key)){
             curr=curr.next;
         }
         if(curr.next!=null&&curr.next.data!=null){
             ans=curr.next.data.value;
             MFLnode temp=curr.next;
-            curr.next=temp;
+            curr.next=temp.next;
             temp.next=this.head;
             this.head=temp;
         }
