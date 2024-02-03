@@ -68,27 +68,28 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
             int index = 0;
             int minin=minind(index);
             while (minin!=-1 && this.data[index].compareTo(this.data[minin])>0) {
-                E temp=this.data[index];
-                this.data[index]=this.data[minin];
-                this.data[minin]=temp;
+                E temp=this.data[minin];
+                this.data[minin]=this.data[index];
+                this.data[index]=temp;
                 index=minin;
-                minin=minind(index);
+                int lol=4*index+1;
+                minin=minind(lol);
             }
         }
         return ans;
     }
     private int minind(int index){
         int min=-1;
-        int ind=4*index+1;
-        for(int i=0;i<4;i++){
-            int curr=ind+i;
-            if(curr<size){
-                if(min==-1||this.data[curr].compareTo(this.data[min])<0){
-                    min=curr;
-                }
-            }
-        }
-        return min;
+       if(index>this.size){
+           return -1;
+       }
+       min=index;
+       for(int i=index;i<index+4;i++){
+           if(i<size && this.data[i].compareTo(this.data[min])<0){
+               min=i;
+           }
+       }
+       return min;
     }
     @Override
     public int size() {
