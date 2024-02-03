@@ -59,8 +59,8 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
         }
         else{
             this.head=new MFLnode(new Item(key,value),this.head);
-            this.size++;
         }
+        this.size++;
         return val;
     }
 
