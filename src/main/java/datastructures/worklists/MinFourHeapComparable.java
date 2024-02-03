@@ -64,23 +64,23 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
         this.data[0]=this.data[size-1];
         this.data[size-1]=null;
         this.size--;
-        int index=1;
-        if(size<=1){
-            return ans;
-        }
-        E temp= this.data[0];
-        E min= null;
-        while((temp.compareTo(this.data[(4*index)-3])>0)||(temp.compareTo(this.data[(4*index)-2])>0)||(temp.compareTo(this.data[(4*index)-1])>0)||(temp.compareTo(this.data[(4*index)])>0)){
-            min= this.data[(4*index)-3];
-            for(int i=0;i<4;i++){
-                if(min.compareTo(this.data[(4*index)-3+i])>0){
-                    min=this.data[(4*index)-3+i];
-                    index=(4*index)-3+i;
+        if(this.size>0) {
+            int index = 1;
+            E temp = this.data[0];
+            E min = null;
+            while ((temp.compareTo(this.data[(4 * index) - 3]) > 0) || (temp.compareTo(this.data[(4 * index) - 2]) > 0) || (temp.compareTo(this.data[(4 * index) - 1]) > 0) || (temp.compareTo(this.data[(4 * index)]) > 0) || (4*index)-3>this.size) {
+                min = this.data[(4 * index) - 3];
+                int ind=(4*index)-3;
+                for (int i = ind+1; i < ind+4; i++) {
+                    if (min.compareTo(this.data[ind]) > 0 && ind<this.size) {
+                        min = this.data[ind];
+                        index = ind;
+                    }
                 }
+                this.data[index] = temp;
+                this.data[(int) Math.floor((index - 1) / 4)] = min;
             }
         }
-        this.data[index]=temp;
-        this.data[(int)Math.floor((index-1)/4)]=min;
         return ans;
     }
 
