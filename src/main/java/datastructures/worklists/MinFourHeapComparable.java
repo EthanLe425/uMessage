@@ -69,7 +69,6 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
         }
         E ans=this.data[0];
         this.data[0]=this.data[size-1];
-        this.data[size-1]=null;
         this.size--;
         if(this.size>1) {
             int index = 0;
