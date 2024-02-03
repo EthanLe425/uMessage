@@ -61,22 +61,23 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
             throw new NoSuchElementException();
         }
         E ans=this.data[0];
-        this.data[0]=this.data[size-1];
+        this.data[0]=this.data[size];
+        this.data[size]=null;
         this.size--;
         int index=1;
         E temp= this.data[0];
-        E min= this.data[(4*index)-3];
+        E min= null;
         while((temp.compareTo(this.data[(4*index)-3])>0)||(temp.compareTo(this.data[(4*index)-2])>0)||(temp.compareTo(this.data[(4*index)-1])>0)||(temp.compareTo(this.data[(4*index)])>0)){
             min= this.data[(4*index)-3];
             for(int i=0;i<4;i++){
-                if(min.compareTo(this.data[(4*index)-3+i])<0){
+                if(min.compareTo(this.data[(4*index)-3+i])>0){
                     min=this.data[(4*index)-3+i];
-                    index=4*index-2+i;
+                    index=(4*index)-3+i;
                 }
             }
         }
-        this.data[index-1]=temp;
-        this.data[(int)Math.floor((index+2)/4)-1]=min;
+        this.data[index]=temp;
+        this.data[(int)Math.floor((index-1)/4)]=min;
         return ans;
     }
 
