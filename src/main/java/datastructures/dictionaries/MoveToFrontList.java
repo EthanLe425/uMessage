@@ -72,7 +72,7 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
         }
         MFLnode curr=this.head;
         MFLnode check= null;
-        while(!curr.key.equals(key) && curr!=null){
+        while(!curr.next.key.equals(key) && curr.next!=null){
             check=curr;
             curr=curr.next;
         }
