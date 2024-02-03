@@ -73,7 +73,6 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
             return null;
         }
         if(this.head.data.key.equals(key)){
-            this.size--;
             return this.head.data.value;
         }
         MFLnode curr= this.head;
@@ -87,7 +86,6 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
             curr.next=temp.next;
             temp.next=this.head;
             this.head=temp;
-            this.size--;
         }
         return ans;
     }

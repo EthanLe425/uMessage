@@ -42,15 +42,16 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
         }
         int size2=this.size-1;
         while((this.data[(size2-1)/4].compareTo(work))>0&&size2>0){
+            E temp= this.data[size2];
             this.data[size2]=this.data[(size2-1)/4];
-            this.data[(size2-1)/4]=work;
+            this.data[(size2-1)/4]=temp;
             size2=(size2-1)/4;
         }
     }
 
     @Override
     public E peek() {
-        if(this.size==0){
+        if(!this.hasWork()){
             throw new NoSuchElementException();
         }
         return this.data[0];
@@ -60,11 +61,6 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
     public E next() {
         if(!this.hasWork()){
             throw new NoSuchElementException();
-        }
-        if(this.size==1){
-            E pow= this.data[0];
-            this.size--;
-            return pow;
         }
         E ans=this.data[0];
         this.data[0]=this.data[size-1];
