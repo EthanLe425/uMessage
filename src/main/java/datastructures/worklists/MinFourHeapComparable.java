@@ -28,7 +28,7 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
     @Override
     public void add(E work)  {
         if(this.data.length==this.size){
-            E[] copy=(E[]) new Object[this.data.length*2];
+            E[] copy=(E[]) new Comparable[this.data.length*2];
                     for(int i=0; i<this.data.length;i++){
                         copy[i]=this.data[i];
                     }
