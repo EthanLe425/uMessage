@@ -23,44 +23,42 @@ import java.util.Iterator;
  */
 public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
     public MFLnode head;
+    private class MFLnode extends Item<K,V>{
+        private MFLnode next;
+        public MFLnode(K key, V val){
+            super(key, val);
+            this.next=null;
+
+        }
+        public MFLnode(K key, V val, MFLnode nex){
+            super(key,val);
+            this.next=nex;
+        }
+    }
     public MoveToFrontList(){
         super();
         this.head=null;
-    }
-    public MoveToFrontList(Item<K,V> item){
-        this.head=new MFLnode(item);
-        if(item==null||item.key==null||item.value==null){
-            this.size=0;
-        }
-        else{
-            this.size=1;
-        }
-    }
-    private class MFLnode{
-        private Item<K,V> data;
-        private MFLnode next;
-        public MFLnode(Item<K,V> ins, MFLnode next) {
-            this.data=ins;
-            this.next=next;
-        }
-        public MFLnode(Item<K,V> ins){
-            this.data=ins;
-            this.next=null;
-        }
+        this.size=0;
     }
     @Override
     public V insert(K key, V value) {
         if(key==null||value==null){
             throw new IllegalArgumentException();
         }
-        V val=this.find(key);
-        if(val!=null){
-            this.head.data.value=val;
+        if(this.head==null){
+            this.head= new MFLnode(key, value, null);
+                    size++;
+            return null;
         }
-        else{
-            this.head=new MFLnode(new Item(key,value),this.head);
+        V val= find(key);
+        if(val==null){
+            MFLnode put= new MFLnode(key,value);
+            put.next=this.head;
+            this.head=put;
+            size++;
+            return val;
         }
-        this.size++;
+        this.head.value=value;
         return val;
     }
 
@@ -69,25 +67,25 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
         if(key==null){
             throw new IllegalArgumentException();
         }
-        if(this.head==null||this.head.data==null){
+        if(this.head==null){
             return null;
         }
-        if(this.head.data.key.equals(key)){
-            return this.head.data.value;
-        }
-        MFLnode curr= this.head;
-        V ans = null;
-        while(curr.next!=null&&curr.next.data!=null&&!curr.next.data.key.equals(key)){
+        MFLnode curr=this.head;
+        MFLnode check= null;
+        while(!curr.key.equals(key) && curr!=null){
+            check=curr;
             curr=curr.next;
         }
-        if(curr.next!=null&&curr.next.data!=null){
-            ans=curr.next.data.value;
-            MFLnode temp=curr.next;
-            curr.next=temp.next;
-            temp.next=this.head;
-            this.head=temp;
+        if(curr==null){
+            return null;
         }
-        return ans;
+        if(check==null){
+            return this.head.value;
+        }
+        check.next=curr.next;
+        curr.next=this.head;
+        this.head=curr;
+        return curr.value;
     }
 
     @Override
@@ -103,8 +101,8 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
             return this.curr!=null &&curr.next!=null;
         }
         public Item<K,V> next(){
-           Item<K,V> item=curr.data;
-           curr=curr.next;
+           Item<K,V> item=new Item<>(this.curr.key,this.curr.value);
+           this.curr=this.curr.next;
            return item;
         }
     }
