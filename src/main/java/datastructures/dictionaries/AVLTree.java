@@ -1,6 +1,7 @@
 package datastructures.dictionaries;
 
 import cse332.datastructures.trees.BinarySearchTree;
+import cse332.exceptions.NotYetImplementedException;
 
 /**
  * AVLTree must be a subclass of BinarySearchTree<E> and must use
@@ -28,4 +29,5 @@ import cse332.datastructures.trees.BinarySearchTree;
 
 public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTree<K, V> {
     // TODO: Implement me!
+
 }

@@ -23,17 +23,66 @@ import java.util.function.Supplier;
  */
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>> newChain;
-
+    private double load;
+    private double count;
+    private int count2;
+    private int start;
+    private Dictionary<K,V>[]arr;
     static final int[] PRIME_SIZES =
             {11, 23, 47, 97, 193, 389, 773, 1549, 3089, 6173, 12347, 24697, 49393, 98779, 197573, 395147};
 
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
+        this.load=0.0;
+        this.arr=new Dictionary[10];
+        for(int i=0; i<10;i++){
+            arr[i]=newChain.get();
+        }
+        start=0;
+        count=0.0;
+        count2=0;
     }
 
     @Override
     public V insert(K key, V value) {
-        throw new NotYetImplementedException();
+       if(load>0){
+           Dictionary<K,V>[] copy= new Dictionary[this.arr.length*2];
+           for(int i=0;i<arr.length;i++){
+               if(arr[i]!=null){
+                   for(Item<K,V>thing:arr[i]){
+                       int ind=Math.abs(thing.key.hashCode()%copy.length);
+                       if(ind>=0){
+                           if(copy[ind]==null){
+                            copy[ind]=newChain.get();
+                           }
+                           copy[ind].insert(thing.key,thing.value);
+                       }
+                       else{
+                           copy=new Dictionary[0];
+                       }
+                   }
+               }
+           }
+           start++;
+           this.arr=copy;
+       }
+       int index=Math.abs(key.hashCode()%arr.length);
+       if(index>=0){
+           if(this.arr[index]==null){
+               this.arr[index]= newChain.get();
+           }
+           V ans=null;
+           if(this.find(key)==null){
+               count2++;
+           }
+           else{
+               ans=this.find(key);
+           }
+           this.arr[index].insert(key,value);
+           load=(count+1)/arr.length;
+           return ans;
+       }
+       return null;
     }
 
     @Override
