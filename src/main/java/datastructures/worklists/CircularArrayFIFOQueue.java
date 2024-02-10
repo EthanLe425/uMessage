@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  * See cse332/interfaces/worklists/FixedSizeFIFOWorkList.java
  * for method specifications.
  */
-public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
+public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFIFOWorkList<E> {
     private int front;
     private int back;
     private int size;
@@ -101,7 +101,14 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
     @Override
     public int compareTo(FixedSizeFIFOWorkList<E> other) {
         // You will implement this method in project 2. Leave this method unchanged for project 1.
-        throw new NotYetImplementedException();
+        for(int i=0; i<Math.min(this.size(),other.size()); i++){
+            E thing1=this.peek(i);
+            E thing2=other.peek(i);
+            if(!thing1.equals(thing2)){
+                return thing1.compareTo(thing2);
+            }
+        }
+        return this.size()-other.size();
     }
 
     @Override
@@ -114,11 +121,10 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
             return false;
         } else {
             // Uncomment the line below for p2 when you implement equals
-            // FixedSizeFIFOWorkList<E> other = (FixedSizeFIFOWorkList<E>) obj;
+            FixedSizeFIFOWorkList<E> other = (FixedSizeFIFOWorkList<E>) obj;
 
             // Your code goes here
-
-            throw new NotYetImplementedException();
+            return this.compareTo(other)==0;
         }
     }
 
