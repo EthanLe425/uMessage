@@ -26,24 +26,32 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>> newChain;
     private double load;
     private double count;
+    private int start;
     private Dictionary<K,V>[]arr;
     static final int[] PRIME_SIZES =
             {11, 23, 47, 97, 193, 389, 773, 1549, 3089, 6173, 12347, 24697, 49393, 98779, 197573, 395147};
 
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
+        this.count=0.0;
         this.load=0.0;
         this.arr=new Dictionary[10];
         for(int i=0; i<10;i++){
             arr[i]=newChain.get();
         }
-        count=0.0;
+
     }
 
     @Override
     public V insert(K key, V value) {
-       if(load>0){
-           Dictionary<K,V>[] copy= new Dictionary[this.arr.length*2];
+        Dictionary<K, V>[] copy;
+       if(load>=1){
+           if(start>20) {
+                copy= new Dictionary[this.arr.length * 2];
+           }
+           else{
+               copy=new Dictionary[PRIME_SIZES[start]];
+           }
            for(int i=0;i<arr.length;i++){
                if(arr[i]!=null){
                    for(Item<K,V>thing:arr[i]){
@@ -60,6 +68,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                    }
                }
            }
+           start++;
            this.arr=copy;
        }
        int index=Math.abs(key.hashCode()%arr.length);
@@ -68,9 +77,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                this.arr[index]= newChain.get();
            }
            V ans=null;
-           if(this.find(key)==null){
-           }
-           else{
+           if(this.find(key)!=null){
                ans=this.find(key);
            }
            this.arr[index].insert(key,value);
@@ -98,7 +105,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         if(arr[0]==null){
             arr[0]= newChain.get();
         }
-        Iterator<Item<K,V>> iter=new Iterator<Item<K, V>>() {
+        Iterator<Item<K,V>> iter=new Iterator<>() {
             private int start=0;
             Iterator<Item<K,V>> pog= arr[0].iterator();
             @Override
