@@ -26,8 +26,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>> newChain;
     private double load;
     private double count;
-    private int count2;
-    private int start;
     private Dictionary<K,V>[]arr;
     static final int[] PRIME_SIZES =
             {11, 23, 47, 97, 193, 389, 773, 1549, 3089, 6173, 12347, 24697, 49393, 98779, 197573, 395147};
@@ -39,9 +37,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         for(int i=0; i<10;i++){
             arr[i]=newChain.get();
         }
-        start=0;
         count=0.0;
-        count2=0;
     }
 
     @Override
@@ -64,7 +60,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                    }
                }
            }
-           start++;
            this.arr=copy;
        }
        int index=Math.abs(key.hashCode()%arr.length);
@@ -74,7 +69,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
            }
            V ans=null;
            if(this.find(key)==null){
-               count2++;
            }
            else{
                ans=this.find(key);
