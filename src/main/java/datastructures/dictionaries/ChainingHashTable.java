@@ -6,6 +6,7 @@ import cse332.interfaces.misc.DeletelessDictionary;
 import cse332.interfaces.misc.Dictionary;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 /**
@@ -87,12 +88,59 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     @Override
     public V find(K key) {
-        throw new NotYetImplementedException();
+        int ind=Math.abs(key.hashCode()%arr.length);
+        if(ind<0){
+            return null;
+        }
+        if(arr[ind]!=null){
+            return arr[ind].find(key);
+        }
+        arr[ind]= newChain.get();
+        return null;
     }
 
     @Override
     public Iterator<Item<K, V>> iterator() {
-        throw new NotYetImplementedException();
+        if(arr[0]==null){
+            arr[0]= newChain.get();
+        }
+        Iterator<Item<K,V>> iter=new Iterator<Item<K, V>>() {
+            private int start=0;
+            Iterator<Item<K,V>> pog= arr[0].iterator();
+            @Override
+            public boolean hasNext() {
+                if(start<arr.length&&!pog.hasNext()){
+                    if(arr[start+1]==null){
+                        start++;
+                        while(arr[start]==null){
+                            start++;
+                            if(start>=arr.length){
+                                return false;
+                            }
+                        }
+                    }
+                    else{
+                        start++;
+                    }
+                if(start<arr.length){
+                    pog=arr[start].iterator();
+                }
+                }
+                if(start>=arr.length){
+                    return false;
+                }
+                return pog.hasNext();
+            }
+
+            @Override
+            public Item<K, V> next() {
+                if(!hasNext()){
+                    throw new NoSuchElementException();
+                }
+                return pog.next();
+            }
+        };
+        return iter;
     }
 
     /**
