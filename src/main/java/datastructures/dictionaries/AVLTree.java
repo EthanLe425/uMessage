@@ -66,7 +66,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
                 sign=1;
                 branch=1;
             }
-            else if(key.compareTo(curr.key)=0){
+            else if(key.compareTo(curr.key)==0){
                 return curr;
             }
             else{
@@ -82,7 +82,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         next.add(curr);
         first.children[branch]=curr;
         if(first.children[1-branch]==null){
-            prev=this.heights(next);
+            prev=this.imbal(next);
         }
         else{
             prev.height=prev.height+sign;
@@ -94,7 +94,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
                 sign2=1;
                 branch2=2;
             }
-            else if(key.compareTo(prev.key)=0){
+            else if(key.compareTo(prev.key)==0){
                 sign2=0;
                 branch2=1;
             }
@@ -102,8 +102,81 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
                 sign2=-1;
                 branch2=0;
             }
-            prev.children[branch2]=this.rotate(next);
+            prev.children[branch2]=this.rot(next);
         }
         return curr;
+    }
+    private AVLNode imbal(ArrayStack<AVLNode>next){
+        AVLNode prev=null;
+        AVLNode nex=null;
+        AVLNode nex2=null;
+        while(next.size()>1){
+            nex2=nex;
+            nex=next.next();
+            prev=next.peek();
+            if(nex==prev.children[1]){
+                prev.height++;
+            }
+            else{
+                prev.height--;
+            }
+            if(Math.abs(prev.height)==2){
+                if(next.size()==1){
+                    next.clear();
+                    next.add(prev);
+                    next.add(nex);
+                    next.add(nex2);
+                    this.root=this.rot(next);
+                    return null;
+                }
+                else{
+                    next.next();
+                    AVLNode prev2=next.peek();
+                    next.clear();
+                    next.add(prev);
+                    next.add(nex);
+                    next.add(nex2);
+                    return prev2;
+                }
+            }
+        }
+        return null;
+    }
+    private AVLNode rot(ArrayStack<AVLNode>pog){
+        AVLNode nex2=pog.next();
+        AVLNode nex=pog.next();
+        AVLNode prev= pog.next();
+        AVLNode stuff=null;
+        int sign= -69;
+        int branch= -420;
+        if(nex2.key.compareTo(prev.key)>0){
+            sign=1;
+            branch=1;
+        }
+        else if(nex2.key.compareTo(prev.key)==0){
+            sign=0;
+            branch=1;
+        }
+        else{
+            sign=-1;
+            branch=0;
+        }
+        if((prev.key.compareTo(nex2.key)<0&&nex2.key.compareTo(nex.key)<0)||(nex.key.compareTo(nex2.key)<0&&nex2.key.compareTo(prev.key)<0)){
+            prev.children[branch]=nex2;
+            stuff=(AVLNode)nex2.children[branch];
+            nex.children[1-branch]=stuff;
+            nex2.children[branch]=nex;
+            AVLNode temp= nex;
+            nex=nex2;
+            nex2=temp;
+            nex.height=nex.height+sign;
+            nex2.height= nex2.height+sign;
+        }
+        stuff=(AVLNode) nex.children[1-branch];
+        prev.children[branch]=stuff;
+        nex.children[1-branch]=prev;
+        nex.height=nex.height-sign;
+        prev.height=prev.height-(2*sign);
+        return nex;
     }
 }
