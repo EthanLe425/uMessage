@@ -110,7 +110,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
             Iterator<Item<K,V>> pog= arr[0].iterator();
             @Override
             public boolean hasNext() {
-                if(start<arr.length&&!pog.hasNext()){
+                if(start+1<arr.length&&!pog.hasNext()){
                     if(arr[start+1]==null){
                         start++;
                         while(arr[start]==null){
@@ -127,10 +127,10 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                     pog=arr[start].iterator();
                 }
                 }
-                if(start>=arr.length){
-                    return false;
+                if(start<arr.length){
+                    return pog.hasNext();
                 }
-                return pog.hasNext();
+        return false;
             }
 
             @Override
