@@ -59,7 +59,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         AVLNode curr=(AVLNode) this.root;
         AVLNode prev= null;
         int sign=0;
-        int branch=-69;
+        int branch=-1;
         while(curr!=null){
             next.add(curr);
             if(key.compareTo(curr.key)>0){
@@ -76,33 +76,24 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             curr= (AVLNode) curr.children[branch];
         }
         curr=new AVLNode(key,null);
-        next.add(curr);
         this.size++;
         AVLNode first=next.peek();
         next.add(curr);
         first.children[branch]=curr;
-        if(first.children[1-branch]==null){
-            prev=this.imbal(next);
+        if(first.children[1-branch]!=null){
+            first.height=first.height+sign;
+
         }
         else{
-            prev.height=prev.height+sign;
+            prev=this.imbal(next);
         }
         if(prev!=null){
-            int sign2=0;
-            int branch2=0;
-            if(key.compareTo(prev.key)>0){
-                sign2=1;
-                branch2=2;
-            }
-            else if(key.compareTo(prev.key)==0){
-                sign2=0;
-                branch2=1;
+            if(key.compareTo(prev.key)>=0){
+                prev.children[1]=this.rot(next);
             }
             else{
-                sign2=-1;
-                branch2=0;
+                prev.children[0]=this.rot(next);
             }
-            prev.children[branch2]=this.rot(next);
         }
         return curr;
     }
@@ -147,13 +138,16 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         AVLNode nex=pog.next();
         AVLNode prev= pog.next();
         AVLNode stuff=null;
+        K key1=prev.key;
+        K key2=nex.key;
+        K key3=nex2.key;
         int sign= -69;
         int branch= -420;
-        if(nex2.key.compareTo(prev.key)>0){
+        if(key3.compareTo(key1)>0){
             sign=1;
             branch=1;
         }
-        else if(nex2.key.compareTo(prev.key)==0){
+        else if(key3.compareTo(key1)==0){
             sign=0;
             branch=1;
         }
@@ -161,7 +155,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             sign=-1;
             branch=0;
         }
-        if((prev.key.compareTo(nex2.key)<0&&nex2.key.compareTo(nex.key)<0)||(nex.key.compareTo(nex2.key)<0&&nex2.key.compareTo(prev.key)<0)){
+        if((key1.compareTo(key3)<0&&key3.compareTo(key2)<0)||(key2.compareTo(key3)<0&&key3.compareTo(key1)<0)){
             prev.children[branch]=nex2;
             stuff=(AVLNode)nex2.children[branch];
             nex.children[1-branch]=stuff;
