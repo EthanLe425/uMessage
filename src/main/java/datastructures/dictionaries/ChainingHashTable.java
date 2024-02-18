@@ -42,24 +42,26 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
        if((double)this.size/this.arr.length>=this.load){
            Dictionary<K, V>[] copy;
            if(this.start<arr.length){
-               copy=new Dictionary[PRIME_SIZES[this.size++]];
+               copy=new Dictionary[PRIME_SIZES[this.start++]];
+               this.start++;
            }
            else{
-               copy=new Dictionary[this.size*2];
+               copy=new Dictionary[this.arr.length*2];
            }
-           Iterator<Item<K,V>> iter=iterator();
-           while(iter.hasNext()){
-               Item<K,V> nex=iter.next();
-               int ind=Math.abs((nex.key.hashCode()*31)%copy.length);
-               if(copy[ind]==null){
-                   copy[ind]=this.newChain.get();
+           for(int i=0; i<arr.length;i++){
+               if(arr[i]!=null){
+                   for(Item<K,V>next:arr[i]){
+                       int ind=Math.abs(next.key.hashCode()%copy.length);
+                           if(copy[ind]==null){
+                               copy[ind]= newChain.get();
+                           }
+                           copy[i].insert(next.key,next.value);
+                   }
                }
-               Dictionary<K,V>next=copy[ind];
-               next.insert(nex.key,nex.value);
            }
            this.arr=copy;
        }
-       int index=Math.abs((key.hashCode()*31)%arr.length);
+       int index=Math.abs((key.hashCode())%arr.length);
            if(this.arr[index]==null){
                this.arr[index]= newChain.get();
            }
@@ -74,7 +76,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     @Override
     public V find(K key) {
-        int ind=Math.abs((key.hashCode()*31)%arr.length);
+        int ind=Math.abs((key.hashCode())%arr.length);
         if(this.arr[ind]==null){
             return null;
         }
