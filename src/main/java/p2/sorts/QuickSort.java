@@ -12,4 +12,21 @@ public class QuickSort {
     public static <E> void sort(E[] array, Comparator<E> comparator) {
         throw new NotYetImplementedException();
     }
+    private static<E> void recurs(E[]arr,Comparator<E> comp,int start,int end){
+        if(end-start<2){
+            return;
+        }
+        int firs=start-1;
+        E last=arr[end-1];
+        for(int i=start;i<end;i++){
+            if(comp.compare(arr[i],last)<=0){
+                firs++;
+                E copy=arr[firs];
+                arr[firs]=arr[i];
+                arr[i]=copy;
+            }
+        }
+        recurs(arr,comp,start,firs);
+        recurs(arr,comp,firs+1,end);
+    }
 }
