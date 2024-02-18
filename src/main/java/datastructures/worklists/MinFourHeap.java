@@ -40,9 +40,11 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
             this.data=copy;
         }
         int size2=size;
-        while(size2>0 && comp.compare(work,this.data[(size2-1)/4])<0){
-            this.data[size2]=this.data[(size2-1)/4];
+        E work2=this.data[(size2-1)/4];
+        while(size2>0 && comp.compare(work,work2)<0){
+            this.data[size2]=work2;
             size2=(size2-1)/4;
+            work2=this.data[size2];
         }
         this.data[size2]=work;
         size++;
@@ -50,7 +52,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     @Override
     public E peek() {
-        if(!this.hasWork()){
+        if(!(this.size>0)){
             throw new NoSuchElementException();
         }
         return this.data[0];
