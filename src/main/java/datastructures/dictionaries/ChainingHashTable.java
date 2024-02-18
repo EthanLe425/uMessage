@@ -48,7 +48,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
            Iterator<Item<K,V>> iter=iterator();
            while(iter.hasNext()){
                Item<K,V>next=iter.next();
-               int ind=Math.abs(key.hashCode()%copy.length);
+               int ind=Math.abs(next.key.hashCode()%copy.length);
                if(copy[ind]==null){
                    copy[ind]=this.newChain.get();
                }
