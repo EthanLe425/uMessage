@@ -1,10 +1,12 @@
 
 package datastructures.dictionaries;
 
+import com.sun.net.httpserver.Filter;
 import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.trie.TrieMap;
 import cse332.types.BString;
 import datastructures.worklists.ArrayStack;
+import datastructures.dictionaries.MoveToFrontList;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +25,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
 
         public HashTrieNode(V value) {
-            this.pointers = new HashMap<A, HashTrieNode>();
+            this.pointers = (Map<A, HashTrieNode>) new ChainingHashTable<>(()->new MoveToFrontList<>());
             this.value = value;
         }
 
@@ -113,41 +115,12 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     }
 
     @Override
-    public void delete(K key) {
-        if(key==null){
-            throw new IllegalArgumentException();
-        }
-        ArrayStack<HashTrieNode>psps=new ArrayStack<HashTrieNode>();
-        ArrayStack<A> charch=new ArrayStack<A>();
-        HashTrieNode ayy=(HashTrieNode)this.root;
-        for(A curr:key){
-            if(!ayy.pointers.containsKey(curr)){
-                return;
-            }
-            psps.add(ayy);
-            charch.add(curr);
-            ayy=ayy.pointers.get(curr);
-        }
-        if(ayy.value!=null) {
-            this.size--;
-            ayy.value = null;
-            while (psps.size() > 0) {
-                A pop=charch.next();
-                HashTrieNode rem = psps.next();
-                if (rem.pointers.containsKey(pop) && ayy.pointers.size()==0) {
-                    rem.pointers.remove(pop);
-                }
-                if(rem.value!=null||rem.pointers.size()>0){
-                    return;
-                }
-            }
-        }
+    public void delete(K key) {throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void clear() {
-        this.size=0;
-        this.root= new HashTrieNode();
+        throw new UnsupportedOperationException();
     }
 }
