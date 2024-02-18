@@ -24,7 +24,6 @@ import java.util.function.Supplier;
  */
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>> newChain;
-    private double load;
     private int start;
     private Dictionary<K,V>[]arr;
     static final int[] PRIME_SIZES =
@@ -32,18 +31,16 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
-        this.load=2;
         this.start=0;
         this.arr=new Dictionary[11];
     }
 
     @Override
     public V insert(K key, V value) {
-       if((double)this.size/this.arr.length>=this.load){
+       if((double)this.size/this.arr.length>=2){
            Dictionary<K, V>[] copy;
-           if(this.start<arr.length){
+           if(this.start<PRIME_SIZES.length){
                copy=new Dictionary[PRIME_SIZES[this.start++]];
-               this.start++;
            }
            else{
                copy=new Dictionary[this.arr.length*2];
@@ -59,6 +56,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                    }
                }
            }
+           this.start++;
            this.arr=copy;
        }
        int index=Math.abs((key.hashCode())%arr.length);
