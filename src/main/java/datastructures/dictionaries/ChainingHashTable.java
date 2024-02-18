@@ -32,9 +32,9 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
-        this.load=0.9;
+        this.load=2;
         this.start=0;
-        this.arr=new Dictionary[10];
+        this.arr=new Dictionary[11];
     }
 
     @Override
