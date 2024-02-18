@@ -30,6 +30,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     @Override
     public void add(E work) {
+
         if(this.data.length==this.size){
             E[] copy=(E[]) new Comparable[this.data.length*2];
             for(int i=0; i<this.size;i++){
@@ -38,7 +39,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
             this.data=copy;
         }
         int size2=size;
-        while(size2>0 && this.comp.compare(work,this.data[size2-1/4])>0){
+        while(size2>0 && this.comp.compare(work,this.data[(size2-1)/4])<0){
             this.data[size2]=this.data[(size2-1)/4];
             size2=(size2-1)/4;
         }
