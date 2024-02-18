@@ -2,12 +2,14 @@
 package datastructures.dictionaries;
 
 import com.sun.net.httpserver.Filter;
+import cse332.datastructures.containers.Item;
 import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.trie.TrieMap;
 import cse332.types.BString;
 import datastructures.worklists.ArrayStack;
 import datastructures.dictionaries.MoveToFrontList;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,19 +21,34 @@ import java.util.Map.Entry;
  * for method specifications.
  */
 public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> extends TrieMap<A, K, V> {
-    public class HashTrieNode extends TrieNode<Map<A, HashTrieNode>, HashTrieNode> {
+    public class HashTrieNode extends TrieNode<ChainingHashTable<A, HashTrieNode>, HashTrieNode> {
         public HashTrieNode() {
             this(null);
         }
 
         public HashTrieNode(V value) {
-            this.pointers = (Map<A, HashTrieNode>) new ChainingHashTable<>(()->new MoveToFrontList<>());
+            this.pointers = new ChainingHashTable<>(()->new MoveToFrontList<>());
             this.value = value;
         }
 
         @Override
-        public Iterator<Entry<A, HashTrieMap<A, K, V>.HashTrieNode>> iterator() {
-            return pointers.entrySet().iterator();
+        public Iterator<Entry<A, HashTrieNode>> iterator() {
+            Iterator<Item<A,HashTrieNode>> hash;
+            hash = pointers.iterator();
+            Iterator<Entry<A,HashTrieNode>> entry=new Iterator<Entry<A, HashTrieNode>>() {
+                @Override
+                public boolean hasNext() {
+                    return hash.hasNext();
+                }
+
+                @Override
+                public Entry<A, HashTrieNode> next() {
+                    Item<A,HashTrieNode> retI=hash.next();
+                    Entry<A,HashTrieNode>retE=new AbstractMap.SimpleEntry<>(retI.key,retI.value);
+                    return retE;
+                }
+            };
+            return entry;
         }
     }
 
@@ -56,10 +73,10 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         else {
             HashTrieNode curr = (HashTrieNode) this.root;
             for (A lett : key) {
-                if (!curr.pointers.containsKey(lett)) {
-                    curr.pointers.put(lett, new HashTrieNode());
+                if (curr.pointers.find(lett)!=null) {
+                    curr.pointers.insert(lett, new HashTrieNode());
                 }
-                curr = curr.pointers.get(lett);
+                curr = curr.pointers.find(lett);
             }
             ans = curr.value;
             curr.value = value;
@@ -80,8 +97,8 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
         HashTrieNode fomb=(HashTrieNode) this.root;
         for(A lett:key){
-            if(fomb.pointers.containsKey(lett)){
-                fomb=fomb.pointers.get(lett);
+            if(fomb.pointers.find(lett)!=null){
+                fomb=fomb.pointers.find(lett);
             }
             else{
                 return null;
@@ -104,8 +121,8 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
         HashTrieNode fomb= (HashTrieNode)this.root;
         for(A lett:key){
-            if(fomb.pointers.containsKey(lett)){
-                fomb=fomb.pointers.get(lett);
+            if(fomb.pointers.find(lett)!=null){
+                fomb=fomb.pointers.find(lett);
             }
             else{
                 return false;
