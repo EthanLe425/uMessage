@@ -61,6 +61,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                             copy[ind]=newChain.get();
                            }
                            copy[ind].insert(thing.key,thing.value);
+                           start++;
                        }
                        else{
                            copy=new Dictionary[0];
@@ -68,7 +69,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                    }
                }
            }
-           start++;
            this.arr=copy;
        }
        int index=Math.abs(key.hashCode()%arr.length);
