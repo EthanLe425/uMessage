@@ -36,7 +36,7 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
             this.data=copy;
         }
         int size2=size;
-        while(size2>0 && work.compareTo(this.data[(size2-1)/4])>0){
+        while(size2>0 && work.compareTo(this.data[(size2-1)/4])<0){
             this.data[size2]=this.data[(size2-1)/4];
             size2=(size2-1)/4;
         }
@@ -74,7 +74,7 @@ break;
             }
             else{
                 this.data[size2]=this.data[min];
-                size=min;
+                size2=min;
             }
         }
         this.data[size2]=this.data[size];
