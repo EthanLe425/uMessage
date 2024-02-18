@@ -10,7 +10,7 @@ public class QuickSort {
     }
 
     public static <E> void sort(E[] array, Comparator<E> comparator) {
-        throw new NotYetImplementedException();
+        recurs(array,comparator,0,array.length);
     }
     private static<E> void recurs(E[]arr,Comparator<E> comp,int start,int end){
         if(end-start<2){
