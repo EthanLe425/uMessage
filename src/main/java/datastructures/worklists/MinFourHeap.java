@@ -17,9 +17,10 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
     private int size;
     private Comparator<E> comp;
 
-    public MinFourHeap(Comparator<E> c) {
+    public MinFourHeap(Comparator<E> comp) {
         this.data=(E[])new Object[10];
         this.size=0;
+        this.comp=comp;
     }
 
     @Override
