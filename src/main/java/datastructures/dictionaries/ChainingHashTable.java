@@ -102,10 +102,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                     pog=arr[start].iterator();
 
                 }
-                if(pog!=null){
                     return pog.hasNext();
-                }
-                return false;
             }
 
             @Override
