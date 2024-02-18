@@ -32,7 +32,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
     public void add(E work) {
 
         if(this.data.length==this.size){
-            E[] copy=(E[]) new Comparable[this.data.length*2];
+            E[] copy=(E[]) new Object[this.data.length*2];
             for(int i=0; i<this.size;i++){
                 copy[i]=this.data[i];
             }
