@@ -111,7 +111,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
             @Override
             public boolean hasNext() {
                 if(start<arr.length&&!pog.hasNext()){
-                    if(arr[start+1]==null){
+                    if(arr[start]==null){
                         start++;
                         while(arr[start]==null){
                             start++;
