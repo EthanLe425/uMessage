@@ -13,13 +13,11 @@ public class HeapSort {
     public static <E> void sort(E[] array, Comparator<E> comparator) {
         MinFourHeap<E> heap= new MinFourHeap<E>(comparator);
         E[]copy=array;
-        int ind=0;
-        for(E next:copy){
-            heap.add(next);
+        for(int i=0;i<copy.length;i++){
+            heap.add(copy[i]);
         }
-        while(heap.size()>0){
-            copy[ind]=heap.next();
-            ind++;
+        for(int j=0;j<copy.length;j++){
+            copy[j]=heap.next();
         }
         array=copy;
     }
