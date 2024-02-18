@@ -1,12 +1,10 @@
 package datastructures.dictionaries;
 
 import cse332.datastructures.containers.Item;
-import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.DeletelessDictionary;
 import cse332.interfaces.misc.Dictionary;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 /**
@@ -37,6 +35,9 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     @Override
     public V insert(K key, V value) {
+        if(key==null||value==null){
+            throw new IllegalArgumentException();
+        }
        if((double)this.size/this.arr.length>=2){
            Dictionary<K, V>[] copy;
            if(this.start<PRIME_SIZES.length){
@@ -73,6 +74,9 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     @Override
     public V find(K key) {
+        if(key==null){
+            throw new IllegalArgumentException();
+        }
         int ind=Math.abs((key.hashCode())%arr.length);
         if(this.arr[ind]==null){
             return null;
@@ -82,38 +86,45 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     @Override
     public Iterator<Item<K, V>> iterator() {
-        if(arr[0]==null){
-            arr[0]= newChain.get();
+        return new hashiterator(arr);
+    }
+    private class hashiterator implements Iterator<Item<K,V>>{
+        private Dictionary<K, V>[] array;
+        private Iterator<Item<K, V>> iter;
+        private int start=0;
+        public hashiterator(Dictionary<K,V>[]arr){
+            this.array=arr;
+            while(array[start]==null&&start<array.length){
+                start++;
+            }
+            if(start<array.length){
+                iter=array[start].iterator();
+            }
+            else{
+                iter=null;
+            }
         }
-        Iterator<Item<K,V>> iter=new Iterator<>() {
-            private int start=-1;
-            Iterator<Item<K,V>> pog;
-            @Override
-            public boolean hasNext() {
-                if(!pog.hasNext()||start<0){
-                    start++;
-                    while(start<arr.length&&(arr[start].isEmpty()||arr[start]==null)){
-                        start++;
-                    }
-                    if(start>=arr.length){
-                        pog=null;
-                        return false;
-                    }
-                    pog=arr[start].iterator();
-
-                }
-                    return pog.hasNext();
+    @Override
+        public boolean hasNext(){
+            if(iter.hasNext()&&iter!=null){
+                return true;
             }
-
-            @Override
-            public Item<K, V> next() {
-                if(!hasNext()){
-                    throw new NoSuchElementException();
+            for(int i=start+1;i<array.length;i++){
+                if(array[i]!=null&&array[i].size()>0){
+                    start=i;
+                    iter=array[i].iterator();
+                    return true;
                 }
-                return pog.next();
             }
-        };
-        return iter;
+            return false;
+    }
+    @Override
+        public Item<K,V> next(){
+            if(this.hasNext()){
+                return iter.next();
+            }
+            return null;
+    }
     }
 
     /**
