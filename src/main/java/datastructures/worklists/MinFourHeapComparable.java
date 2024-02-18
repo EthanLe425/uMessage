@@ -74,7 +74,7 @@ break;
             }
             else{
                 this.data[size2]=this.data[min];
-                size2=min;
+                size=min;
             }
         }
         this.data[size2]=this.data[size];
