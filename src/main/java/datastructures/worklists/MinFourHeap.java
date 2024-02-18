@@ -50,7 +50,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     @Override
     public E peek() {
-        if(!(this.size>0)){
+        if(this.size<=0){
             throw new NoSuchElementException();
         }
         return this.data[0];

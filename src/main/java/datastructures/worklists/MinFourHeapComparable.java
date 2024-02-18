@@ -46,7 +46,7 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
 
     @Override
     public E peek() {
-        if(!this.hasWork()){
+        if(this.size<=0){
             throw new NoSuchElementException();
         }
         return this.data[0];
