@@ -131,10 +131,15 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
     @Override
     public int hashCode() {
         // You will implement this method in project 2. Leave this method unchanged for project 1.
-        int hash=0;
+        int hash=1;
         for(int i=0;i<this.size;i++){
-            hash=hash+ (this.arr[(front+i)%arr.length].hashCode()*(this.front+i));
+            if(this.arr[i]==null){
+                hash=31*hash;
+            }
+            else{
+                hash=hash*31 + this.arr[i].hashCode();
+            }
         }
-        return hash*(this.size-this.front);
+        return hash;
     }
 }
