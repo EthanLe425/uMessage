@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>> newChain;
     private double load;
-    private final double count;
     private int start;
     private Dictionary<K,V>[]arr;
     static final int[] PRIME_SIZES =
@@ -33,7 +32,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
-        this.count=0.0;
         this.load=0.9;
         this.arr=new Dictionary[10];
     }
@@ -42,32 +40,25 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     public V insert(K key, V value) {
        if((double)this.size/this.arr.length>=this.load){
            Dictionary<K, V>[] copy;
-           if(start>15) {
-                copy= new Dictionary[this.arr.length * 2];
+           if(this.start<arr.length){
+               copy=new Dictionary[PRIME_SIZES[this.size++]];
            }
            else{
-               copy=new Dictionary[PRIME_SIZES[start]];
+               copy=new Dictionary[this.size*2];
            }
-           for(int i=0;i<arr.length;i++){
-               if(arr[i]!=null){
-                   for(Item<K,V>thing:arr[i]){
-                       int ind=Math.abs(thing.key.hashCode()%copy.length);
-                       if(ind>=0){
-                           if(copy[ind]==null){
-                            copy[ind]=newChain.get();
-                           }
-                           copy[ind].insert(thing.key,thing.value);
-                           start++;
-                       }
-                       else{
-                           copy=new Dictionary[0];
-                       }
-                   }
+           Iterator<Item<K,V>> iter=iterator();
+           while(iter.hasNext()){
+               Item<K,V> nex=iter.next();
+               int ind=Math.abs((nex.key.hashCode()*31)%copy.length);
+               if(copy[ind]==null){
+                   copy[ind]=this.newChain.get();
                }
+               Dictionary<K,V>next=copy[ind];
+               next.insert(nex.key,nex.value);
            }
            this.arr=copy;
        }
-       int index=Math.abs(key.hashCode()%arr.length);
+       int index=Math.abs((key.hashCode()*31)%arr.length);
            if(this.arr[index]==null){
                this.arr[index]= newChain.get();
            }
@@ -75,22 +66,18 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
            int size2=curr.size();
           V ans=curr.insert(key,value);
           if(size2!=curr.size()){
-              size++;
+              this.size++;
           }
           return ans;
     }
 
     @Override
     public V find(K key) {
-        int ind=Math.abs(key.hashCode()%arr.length);
-        if(ind<0){
+        int ind=Math.abs((key.hashCode()*31)%arr.length);
+        if(this.arr[ind]==null){
             return null;
         }
-        if(arr[ind]!=null){
-            return arr[ind].find(key);
-        }
-        arr[ind]= newChain.get();
-        return null;
+        return this.arr[ind].find(key);
     }
 
     @Override
