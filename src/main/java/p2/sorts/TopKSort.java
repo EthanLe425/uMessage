@@ -24,6 +24,7 @@ public class TopKSort {
                 heap.next();
                 heap.add(array[i]);
             }
+            array[i]=null;
         }
         for(int i=0;i<k;i++){
             array[i]=heap.next();
