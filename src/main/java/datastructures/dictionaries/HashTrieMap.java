@@ -97,6 +97,9 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         if(this.root==null){
             return false;
         }
+        if(this.size==0){
+            return false;
+        }
         HashTrieNode fomb= (HashTrieNode)this.root;
         for(A lett:key){
             if(fomb.pointers.containsKey(lett)){
@@ -115,27 +118,26 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             throw new IllegalArgumentException();
         }
         ArrayStack<HashTrieNode>psps=new ArrayStack<HashTrieNode>();
+        ArrayStack<A> charch=new ArrayStack<A>();
         HashTrieNode ayy=(HashTrieNode)this.root;
-        A finl=null;
-        for(A lett:key){
-            if(ayy.pointers.containsKey(lett)){
-                psps.add(ayy);
-                ayy=ayy.pointers.get(lett);
-                finl=lett;
-            }
-            else{
+        for(A curr:key){
+            if(!ayy.pointers.containsKey(curr)){
                 return;
             }
+            psps.add(ayy);
+            charch.add(curr);
+            ayy=ayy.pointers.get(curr);
         }
         if(ayy.value!=null) {
             this.size--;
             ayy.value = null;
-            while (psps.size() != 0) {
-                HashTrieNode nex = psps.next();
-                if (nex.pointers.isEmpty() && nex.value == null) {
-                    HashTrieNode rem = psps.peek();
-                    rem.pointers.remove(finl);
-                } else {
+            while (psps.size() > 0) {
+                A pop=charch.next();
+                HashTrieNode rem = psps.next();
+                if (rem.pointers.containsKey(pop) && ayy.pointers.size()==0) {
+                    rem.pointers.remove(pop);
+                }
+                if(rem.value!=null||rem.pointers.size()>0){
                     return;
                 }
             }
