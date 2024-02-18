@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>> newChain;
     private double load;
-    private double count;
+    private final double count;
     private int start;
     private Dictionary<K,V>[]arr;
     static final int[] PRIME_SIZES =
@@ -44,9 +44,9 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     @Override
     public V insert(K key, V value) {
-        Dictionary<K, V>[] copy;
        if(load>=1){
-           if(start>20) {
+           Dictionary<K, V>[] copy;
+           if(start>15) {
                 copy= new Dictionary[this.arr.length * 2];
            }
            else{
@@ -110,7 +110,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
             Iterator<Item<K,V>> pog= arr[0].iterator();
             @Override
             public boolean hasNext() {
-                if(start+1<arr.length&&!pog.hasNext()){
+                if(start<arr.length&&!pog.hasNext()){
                     if(arr[start+1]==null){
                         start++;
                         while(arr[start]==null){
