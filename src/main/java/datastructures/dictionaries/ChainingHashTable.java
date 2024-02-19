@@ -46,16 +46,12 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
            else{
                copy=new Dictionary[this.arr.length*2];
            }
-           for(int i=0;i<this.arr.length;i++){
-               if(arr[i]!=null){
-                   for(Item<K,V>ite:arr[i]){
-                       int ind=Math.abs(ite.key.hashCode()%copy.length);
-                       if(copy[ind]==null){
-                           copy[ind]= newChain.get();
-                       }
-                       copy[ind].insert(ite.key, ite.value);
-                   }
+           for(Item<K,V>ite:this){
+               int ind=Math.abs(ite.key.hashCode()%copy.length);
+               if(copy[ind]==null){
+                   copy[ind]= newChain.get();
                }
+               copy[ind].insert(ite.key, ite.value);
            }
            this.start++;
            this.arr=copy;
