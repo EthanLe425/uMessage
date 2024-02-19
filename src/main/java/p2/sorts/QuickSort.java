@@ -13,7 +13,7 @@ public class QuickSort {
         recurs(array,comparator,0,array.length);
     }
     private static<E> void recurs(E[]arr,Comparator<E> comp,int start,int end){
-        if(end-start<2){
+        if(start>=end){
             return;
         }
         int firs=start-1;
