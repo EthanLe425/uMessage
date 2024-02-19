@@ -66,7 +66,8 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
            }
            Dictionary<K,V> curr=arr[index];
           V ans=curr.insert(key,value);
-              this.size++;
+
+             if(ans!=null){ this.size++;}
           return ans;
     }
 
