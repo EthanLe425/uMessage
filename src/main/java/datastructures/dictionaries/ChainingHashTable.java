@@ -53,6 +53,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                if(copy[ind]==null){
                    copy[ind]=this.newChain.get();
                }
+               copy[ind].insert(next.key,next.value);
            }
            this.start++;
            this.arr=copy;
